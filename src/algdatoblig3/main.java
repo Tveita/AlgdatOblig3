@@ -16,7 +16,6 @@ Oblig 3 sendes inn!
 
 ///// Oppdatert 8. oktober 2018 ///////////////
 
-import algdatoblig3.ObligSBinTre;
 import java.util.*;
 
 public class main
@@ -27,19 +26,25 @@ public class main
 
         antallFeil += oppgave1();
         antallFeil += oppgave2();
-        antallFeil += oppgave3();
-        /*antallFeil += oppgave4();
+        antallFeil += oppgave3(); // funker ikke flere ganger på samme tre. ødelegger strukturen
+        antallFeil += oppgave4();
         antallFeil += oppgave5();
-        antallFeil += oppgave6();
+        /*antallFeil += oppgave6();
         antallFeil += oppgave7();
         antallFeil += oppgave8();
         antallFeil += oppgave9();
         antallFeil += oppgave10();*/
     
         /*int[] a = {4,7,2,9,4,10,8,7,4,6,1};
+        int[] b = {3,4,7,8,6,2,2,1,6};
         ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-        for(int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre);  // [1, 2, 4, 4, 4, 6, 7, 7, 8, 9, 10]*/
+        for(int verdi : b) tre.leggInn(verdi);
+        
+        System.out.println(tre.toString());
+        System.out.println(tre.omvendtString());
+        tre.nullstill();
+        System.out.println(tre.toString());
+        System.out.println(tre.omvendtString());*/
 
         if (antallFeil == 0)
         {
