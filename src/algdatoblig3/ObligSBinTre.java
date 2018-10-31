@@ -346,12 +346,94 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String høyreGren()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(antall == 0){
+            return "[]";
+        }
+        
+        Node<T> plass = rot;
+        StringBuilder build = new StringBuilder();
+        build.append("[").append(plass.verdi).append(", ");
+        
+        while(plass.høyre != null || plass.venstre != null){
+            if(plass.høyre != null){
+                plass = plass.høyre;
+            }else{
+                plass = plass.venstre;
+            }
+            build.append(plass.verdi).append(", ");
+        }
+        
+        build.delete(build.length()-2, build.length()).append("]");
+        String s = build.toString();
+        return s;
     }
 
     public String lengstGren()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(antall == 0){
+            return "[]";
+        }else if(antall == 1){
+            return "["+rot.verdi+"]";
+        }
+        
+        Deque<Node<T>> lengste = new ArrayDeque<Node<T>>();
+        Deque<Node<T>> proto = new ArrayDeque<Node<T>>();
+        Deque<Node<T>> testet = new ArrayDeque<Node<T>>();
+        Node<T> plass = rot;
+        int rotCount = 0;
+        if(rot.venstre == null && rot.høyre != null){
+            rotCount++;
+        }else if(rot.høyre == null && rot.venstre != null){
+            rotCount++;
+        }
+        
+        proto.push(rot);
+        
+        while(rotCount < 2){
+            if(testet.contains(plass.venstre) && testet.contains(plass.høyre)){
+                testet.push(plass);
+                if(proto.size() > lengste.size()){
+                    lengste = new ArrayDeque<>(proto);
+                }
+                proto.pop();
+                plass = plass.forelder;
+            }else if(plass.høyre == null && plass.venstre == null){
+                testet.push(plass);
+                if(proto.size() > lengste.size()){
+                    lengste = new ArrayDeque<>(proto);
+                }
+                proto.pop();
+                plass = plass.forelder;
+            }else if((testet.contains(plass.høyre) && plass.venstre == null) ||
+                    testet.contains(plass.venstre) && plass.høyre == null){
+                testet.push(plass);
+                if(proto.size() > lengste.size()){
+                    lengste = new ArrayDeque<>(proto);
+                    System.out.println("POP");
+                }
+                proto.pop();
+                plass = plass.forelder;
+            }else if(!testet.contains(plass.venstre) && plass.venstre != null){
+                plass = plass.venstre;
+                proto.push(plass);
+            }else if(!testet.contains(plass.høyre) && plass.høyre != null){
+                plass = plass.høyre;
+                proto.push(plass);
+            }
+            if(plass == rot){
+                rotCount++;
+            }
+        }
+        
+        StringBuilder build = new StringBuilder();
+        build.append("]");
+        while(lengste.peek() != null){
+            build.insert(0, lengste.pop()).insert(0, ", ");
+        }
+        build.delete(0, 2);
+        build.insert(0, "[");
+        
+        return build.toString();
     }
 
     public String[] grener()
