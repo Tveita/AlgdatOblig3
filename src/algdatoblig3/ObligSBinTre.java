@@ -390,26 +390,13 @@ public class ObligSBinTre<T> implements Beholder<T>
         proto.push(rot);
         
         while(rotCount < 2){
-            if(testet.contains(plass.venstre) && testet.contains(plass.høyre)){
+            if((testet.contains(plass.venstre) && testet.contains(plass.høyre)) || 
+                    ((testet.contains(plass.høyre) && plass.venstre == null) ||
+                    testet.contains(plass.venstre) && plass.høyre == null) || 
+                    (plass.høyre == null && plass.venstre == null)){
                 testet.push(plass);
                 if(proto.size() > lengste.size()){
                     lengste = new ArrayDeque<>(proto);
-                }
-                proto.pop();
-                plass = plass.forelder;
-            }else if(plass.høyre == null && plass.venstre == null){
-                testet.push(plass);
-                if(proto.size() > lengste.size()){
-                    lengste = new ArrayDeque<>(proto);
-                }
-                proto.pop();
-                plass = plass.forelder;
-            }else if((testet.contains(plass.høyre) && plass.venstre == null) ||
-                    testet.contains(plass.venstre) && plass.høyre == null){
-                testet.push(plass);
-                if(proto.size() > lengste.size()){
-                    lengste = new ArrayDeque<>(proto);
-                    System.out.println("POP");
                 }
                 proto.pop();
                 plass = plass.forelder;
