@@ -29,22 +29,27 @@ public class main
         antallFeil += oppgave3(); // funker ikke flere ganger på samme tre. ødelegger strukturen
         antallFeil += oppgave4();
         antallFeil += oppgave5();
-        /*antallFeil += oppgave6();
-        antallFeil += oppgave7();
+        antallFeil += oppgave6();
+        /*antallFeil += oppgave7();
         antallFeil += oppgave8();
         antallFeil += oppgave9();
         antallFeil += oppgave10();*/
     
         /*int[] a = {4,7,2,9,4,10,8,7,4,6,1};
-        int[] b = {3,4,7,8,6,2,2,1,6};
+        int[] b = {3,4,7,8,6,2,2,1};
         ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
         for(int verdi : b) tre.leggInn(verdi);
         
         System.out.println(tre.toString());
-        System.out.println(tre.omvendtString());
-        tre.nullstill();
-        System.out.println(tre.toString());
-        System.out.println(tre.omvendtString());*/
+        System.out.println(tre.lengstGren());
+        System.out.println(tre.toString());*/
+        
+        ObligSBinTre<Character> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+        char[] verdier = "IATBHJCRSOFELKGDMPQN".toCharArray();
+        for(char c : verdier) tre.leggInn(c);
+        
+        System.out.println(tre.høyreGren() + " " + tre.lengstGren());
+        
 
         if (antallFeil == 0)
         {
