@@ -544,7 +544,6 @@ public class ObligSBinTre<T> implements Beholder<T>
             return "["+rot.verdi+"]";
         }
         Deque<Node<T>> testet = new ArrayDeque<>();
-        List<Node<T>> orden = new ArrayList<>();
         Node<T> plass = rot;
         int rotCount = 0;
         if(rot.venstre == null && rot.høyre != null){
@@ -599,7 +598,17 @@ public class ObligSBinTre<T> implements Beholder<T>
 
         private BladnodeIterator()  // konstruktør
         {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if(hasNext()){
+                while(p.høyre != null || p.venstre != null){
+                    if(p.venstre != null){
+                        p = p.venstre;
+                    }else{
+                        p = p.høyre;
+                    }
+                }  
+                System.out.println(p.verdi + " : verdi ut av konstruktør");
+            }
+            
         }
 
         @Override
@@ -611,7 +620,37 @@ public class ObligSBinTre<T> implements Beholder<T>
         @Override
         public T next()
         {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if(antall == 0){
+                throw new NoSuchElementException();
+            }else if(q == null){
+                q = p;
+                System.out.println("Fullført");
+                return p.verdi;
+            }else if(p == rot && q != null){
+                throw new NoSuchElementException();
+            }
+            q = p;
+            p = p.forelder;
+            System.out.println(p.verdi + " : verdi før while");
+            while(p.høyre != null || null != p.venstre){
+                if(p.venstre != q && p.høyre != q && p.venstre != null){
+                    p = p.venstre;
+                    System.out.println("Kjørt 1");
+                }else if(p.høyre != q && p.høyre != null){
+                    p = p.høyre;
+                    System.out.println("Kjørt 2");
+                }else if((p.høyre == q || (p.venstre == q && p.høyre == null)) && p != rot){
+                    q = p;
+                    p = p.forelder;
+                    System.out.println("Kjørt 3");
+                }else if(p == rot && q == p.høyre){
+                    break;
+                }
+                System.out.println(p.verdi + " : verdi");
+            }
+            System.out.println("Fullført");
+            System.out.println("-----------------------");
+            return p.verdi;
         }
 
         @Override
