@@ -30,25 +30,39 @@ public class main
         antallFeil += oppgave4();
         antallFeil += oppgave5();
         antallFeil += oppgave6();
-        /*antallFeil += oppgave7();
+        antallFeil += oppgave7();
         antallFeil += oppgave8();
-        antallFeil += oppgave9();
+        /*antallFeil += oppgave9();
         antallFeil += oppgave10();*/
     
         /*int[] a = {4,7,2,9,4,10,8,7,4,6,1};
-        int[] b = {3,4,7,8,6,2,2,1};
+        int[] b = {5,6,8,10,9,7,4,3,3,3,2};
         ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
         for(int verdi : b) tre.leggInn(verdi);
         
         System.out.println(tre.toString());
         System.out.println(tre.lengstGren());
-        System.out.println(tre.toString());*/
+        System.out.println(tre.toString());
         
         ObligSBinTre<Character> tre = new ObligSBinTre<>(Comparator.naturalOrder());
         char[] verdier = "IATBHJCRSOFELKGDMPQN".toCharArray();
-        for(char c : verdier) tre.leggInn(c);
+        for(char c : verdier) tre.leggInn(c);*/
         
-        System.out.println(tre.høyreGren() + " " + tre.lengstGren());
+        /*System.out.println(tre.høyreGren() + " " + tre.lengstGren());
+        
+        String[] s = tre.grener();
+        
+        //for(String gren : s) System.out.println(gren);
+        
+        System.out.println(tre.bladnodeverdier()); // Utskrift: [D, G, K, N, Q, S]*/
+        
+        //System.out.println(tre.postString());
+        // [D, E, G, F, C, H, B, A, K, N, M, L, Q, P, O, S, R, J, T, I]
+        
+        int[] a = {4,7,2,9,4,10,8,7,4,6};
+        ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
+        for(int verdi: a) tre.leggInn(verdi);
+        System.out.println(tre.postString());  // [2, 6, 4, 4, 7, 8, 10, 9, 7, 4]
         
 
         if (antallFeil == 0)
