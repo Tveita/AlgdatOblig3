@@ -425,17 +425,164 @@ public class ObligSBinTre<T> implements Beholder<T>
 
     public String[] grener()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(antall == 0){
+            return new String[] {};
+        }else if(antall == 1){
+            return new String[] {"[" + rot.verdi + "]"};
+        }
+        
+        Deque<Node<T>> proto = new ArrayDeque<Node<T>>();
+        Deque<Node<T>> testet = new ArrayDeque<Node<T>>();
+        Deque<Node<T>> overfor = new ArrayDeque<Node<T>>();
+        Deque<String> sa = new ArrayDeque<String>();
+        Node<T> plass = rot;
+        int rotCount = 0;
+        if(rot.venstre == null && rot.høyre != null){
+            rotCount++;
+        }else if(rot.høyre == null && rot.venstre != null){
+            rotCount++;
+        }
+        
+        proto.push(rot);
+        
+        while(rotCount < 2){
+            if((testet.contains(plass.venstre) && testet.contains(plass.høyre)) || 
+                    ((testet.contains(plass.høyre) && plass.venstre == null) ||
+                    testet.contains(plass.venstre) && plass.høyre == null)){
+                testet.push(plass);
+                proto.pop();
+                plass = plass.forelder;
+            }else if(plass.høyre == null && plass.venstre == null){
+                testet.push(plass);
+                overfor = new ArrayDeque<>(proto);
+                StringBuilder build = new StringBuilder();
+                build.append("]");
+                while(overfor.peek() != null){
+                    build.insert(0, overfor.pop()).insert(0, ", ");
+                }
+                build.delete(0, 2);
+                build.insert(0, "[");
+                sa.push(build.toString());
+                proto.pop();
+                plass = plass.forelder;
+            }else if(!testet.contains(plass.venstre) && plass.venstre != null){
+                plass = plass.venstre;
+                proto.push(plass);
+            }else if(!testet.contains(plass.høyre) && plass.høyre != null){
+                plass = plass.høyre;
+                proto.push(plass);
+            }
+            if(plass == rot){
+                rotCount++;
+            }
+        }
+        
+        int size = sa.size();
+        String[] s = new String[size];
+        
+        while(sa.peek() != null){
+            s[size - 1] = sa.pop();
+            size--;
+        }
+        
+        return s;
     }
 
     public String bladnodeverdier()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(antall == 0){
+            return "[]";
+        }else if(antall == 1){
+            return "["+rot.verdi+"]";
+        }
+        Deque<Node<T>> testet = new ArrayDeque<>();
+        Deque<Node<T>> blader = new ArrayDeque<>();
+        Node<T> plass = rot;
+        
+        blader = bladHjelp(blader, testet, plass);
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        while(blader.peek() != null){
+            sb.insert(1, blader.pop().verdi).insert(1, ", ");
+        }
+        sb.delete(1, 3).append("]");
+        
+        return sb.toString();
+    }
+    
+    private Deque<Node<T>> bladHjelp(Deque<Node<T>> blader, Deque<Node<T>> testet, Node<T> plass){
+        if(!testet.contains(plass.venstre) && plass.venstre != null){
+            plass = plass.venstre;
+            bladHjelp(blader, testet, plass);
+        }else if(!testet.contains(plass.høyre) && plass.høyre != null){
+            plass = plass.høyre;
+            bladHjelp(blader, testet, plass);
+        }else if(plass.høyre == null && plass.venstre == null){
+            blader.push(plass);
+            testet.push(plass);
+            plass = plass.forelder;
+            bladHjelp(blader, testet, plass);
+        }else if(testet.contains(plass.venstre) && testet.contains(plass.venstre) && plass != rot){
+            testet.push(plass);
+            plass = plass.forelder;
+            bladHjelp(blader, testet, plass);
+        }else if((testet.contains(plass.venstre) && plass.høyre == null && plass != rot) || 
+                (testet.contains(plass.høyre) && plass.venstre == null && plass != rot)){
+            testet.push(plass);
+            plass = plass.forelder;
+            bladHjelp(blader, testet, plass);
+        }
+        return blader;
     }
 
     public String postString()
     {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(antall == 0){
+            return "[]";
+        }else if(antall == 1){
+            return "["+rot.verdi+"]";
+        }
+        Deque<Node<T>> testet = new ArrayDeque<>();
+        List<Node<T>> orden = new ArrayList<>();
+        Node<T> plass = rot;
+        int rotCount = 0;
+        if(rot.venstre == null && rot.høyre != null){
+            rotCount++;
+        }else if(rot.høyre == null && rot.venstre != null){
+            rotCount++;
+        }
+        
+        while(rotCount < 2){
+            if(!testet.contains(plass.venstre) && plass.venstre != null){
+                plass = plass.venstre;
+            }else if(!testet.contains(plass.høyre) && plass.høyre != null){
+                plass = plass.høyre;
+            }else if((testet.contains(plass.venstre) && testet.contains(plass.høyre)) ||
+                    (testet.contains(plass.venstre) && plass.høyre == null) ||
+                    (testet.contains(plass.høyre) && plass.venstre == null) ||
+                    (plass.venstre == null && plass.høyre == null)){
+                testet.push(plass);
+                plass = plass.forelder;
+            }
+            if(plass == rot){
+                rotCount++;
+                if(rotCount == 2){
+                    testet.push(rot);
+                }
+            }
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        while(testet.peek() != null){
+            sb.append(testet.pollLast()).append(", ");
+        }
+        sb.delete(sb.length()-2, sb.length());
+        sb.append("]");
+        
+        
+        return sb.toString();
     }
 
     @Override
