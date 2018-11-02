@@ -66,6 +66,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         else if (cmp < 0) q.venstre = p;         // venstre barn til q
         else q.høyre = p;                        // høyre barn til q
 
+        endringer++;
         antall++;                                // én verdi mer i treet
         return true;                             // vellykket innlegging
     }
@@ -496,22 +497,16 @@ public class ObligSBinTre<T> implements Beholder<T>
             return "["+rot.verdi+"]";
         }
         Deque<Node<T>> testet = new ArrayDeque<>();
-        Deque<Node<T>> blader = new ArrayDeque<>();
+        ArrayList<Node<T>> blader = new ArrayList<>();
         Node<T> plass = rot;
         
         blader = bladHjelp(blader, testet, plass);
         
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        while(blader.peek() != null){
-            sb.insert(1, blader.pop().verdi).insert(1, ", ");
-        }
-        sb.delete(1, 3).append("]");
-        
-        return sb.toString();
+        return blader.toString();
     }
     
-    private Deque<Node<T>> bladHjelp(Deque<Node<T>> blader, Deque<Node<T>> testet, Node<T> plass){
+    private ArrayList<Node<T>> bladHjelp(ArrayList<Node<T>> blader, Deque<Node<T>> testet, Node<T> plass){
+        //System.out.println("Kjørt");
         if(!testet.contains(plass.venstre) && plass.venstre != null){
             plass = plass.venstre;
             bladHjelp(blader, testet, plass);
@@ -519,7 +514,7 @@ public class ObligSBinTre<T> implements Beholder<T>
             plass = plass.høyre;
             bladHjelp(blader, testet, plass);
         }else if(plass.høyre == null && plass.venstre == null){
-            blader.push(plass);
+            blader.add(plass);
             testet.push(plass);
             plass = plass.forelder;
             bladHjelp(blader, testet, plass);
@@ -606,9 +601,7 @@ public class ObligSBinTre<T> implements Beholder<T>
                         p = p.høyre;
                     }
                 }  
-                System.out.println(p.verdi + " : verdi ut av konstruktør");
-            }
-            
+            } 
         }
 
         @Override
@@ -622,35 +615,34 @@ public class ObligSBinTre<T> implements Beholder<T>
         {
             if(antall == 0){
                 throw new NoSuchElementException();
-            }else if(q == null){
-                q = p;
-                System.out.println("Fullført");
-                return p.verdi;
-            }else if(p == rot && q != null){
-                throw new NoSuchElementException();
             }
-            q = p;
-            p = p.forelder;
-            System.out.println(p.verdi + " : verdi før while");
-            while(p.høyre != null || null != p.venstre){
-                if(p.venstre != q && p.høyre != q && p.venstre != null){
-                    p = p.venstre;
-                    System.out.println("Kjørt 1");
-                }else if(p.høyre != q && p.høyre != null){
-                    p = p.høyre;
-                    System.out.println("Kjørt 2");
-                }else if((p.høyre == q || (p.venstre == q && p.høyre == null)) && p != rot){
+            if(p == rot){
+                return rot.verdi;
+            }
+            if(iteratorendringer != endringer)
+                throw new ConcurrentModificationException();
+            
+            Deque<Node<T>> testet = new ArrayDeque<>();
+            Node<T> plass = rot;
+            ArrayList<Node<T>> huff = new ArrayList<>();
+            huff = bladHjelp(huff, testet, plass);
+            
+            for(int i = 0; i<huff.size()-1; i++){
+                if(huff.get(i).equals(p)) {
                     q = p;
-                    p = p.forelder;
-                    System.out.println("Kjørt 3");
-                }else if(p == rot && q == p.høyre){
-                    break;
+                    p = huff.get(i + 1);
+                    removeOK = true;
+                    return q.verdi;
                 }
-                System.out.println(p.verdi + " : verdi");
             }
-            System.out.println("Fullført");
-            System.out.println("-----------------------");
-            return p.verdi;
+            if(!hasNext())
+                throw new NoSuchElementException();
+            else {
+                q = p;
+                p = null;
+                removeOK = true;
+                return q.verdi;
+            }
         }
 
         @Override
