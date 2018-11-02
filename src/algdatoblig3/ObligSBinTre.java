@@ -149,6 +149,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         }
 
         antall--;   // det er nå én node mindre i treet
+        endringer++;
         return true;
   }
 
@@ -226,6 +227,7 @@ public class ObligSBinTre<T> implements Beholder<T>
             }else if(plass.høyre == null && plass.venstre == null && plass == rot){
                 rot = null;
                 antall--;
+                endringer++;
             }
         }
     }
@@ -613,7 +615,7 @@ public class ObligSBinTre<T> implements Beholder<T>
         @Override
         public T next()
         {
-            if(antall == 0){
+            if(p == rot && antall == 0){
                 throw new NoSuchElementException();
             }
             if(p == rot){
