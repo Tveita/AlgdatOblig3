@@ -602,7 +602,9 @@ public class ObligSBinTre<T> implements Beholder<T>
                     }else{
                         p = p.høyre;
                     }
-                }  
+                } 
+                removeOK = false;
+                iteratorendringer = endringer;
             } 
         }
 
@@ -650,7 +652,15 @@ public class ObligSBinTre<T> implements Beholder<T>
         @Override
         public void remove()
         {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if (!removeOK)throw new IllegalStateException();
+            // q skal slettes
+            // p er neste
+
+            if(q.venstre == null && q.høyre== null && p.venstre == q)p.venstre = null; q = null;
+            if (q.venstre == null && q.høyre== null && p.høyre == q)p.høyre = null; q = null;
+
+            removeOK = false;
+            endringer++;
         }
     } // BladnodeIterator
 } // ObligSBinTre
